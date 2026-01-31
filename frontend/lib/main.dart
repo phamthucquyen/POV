@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/login/login.dart';
 import 'screens/onboarding/onboarding_screen.dart';
 
 void main() {
@@ -22,7 +23,10 @@ class LandmarkApp extends StatelessWidget {
           background: const Color(0xFFEDFFFC),
         ),
       ),
-      home: const OnboardingScreen(),
+      home: const LoginScreen(),
+      routes: {
+        '/onboarding': (context) => const OnboardingScreen(),
+      },
     );
   }
 }
