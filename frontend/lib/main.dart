@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'screens/camera/scan_screen.dart';
 import 'screens/landmark/result_screen.dart';
 import 'services/landmark_service.dart';
 
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
         useMaterial3: true,
       ),
-      home: const TestLandmarkScreen(),
+      home: const ScanScreen(),
     );
   }
 }
