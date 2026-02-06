@@ -18,12 +18,282 @@ class LandmarkResultScreen extends StatefulWidget {
 
 class _LandmarkResultScreenState extends State<LandmarkResultScreen> {
   bool _isSpeaking = false;
+  int _nearbyTab = 0;
 
   void _toggleSpeech() {
     setState(() {
       _isSpeaking = !_isSpeaking;
     });
     // TODO: Implement text-to-speech functionality
+  }
+
+  List<Map<String, dynamic>> _asMapList(dynamic value) {
+    if (value is List) {
+      return value
+          .whereType<Map>()
+          .map((item) => Map<String, dynamic>.from(item))
+          .toList();
+    }
+    return [];
+  }
+
+  String _formatDistance(dynamic meters) {
+    if (meters == null) return '';
+    final m = meters is num ? meters.toDouble() : double.tryParse(meters.toString());
+    if (m == null) return '';
+    final miles = m / 1609.34;
+    if (miles < 0.1) {
+      return '<0.1 mi';
+    }
+    return '${miles.toStringAsFixed(1)} mi';
+  }
+
+  String _formatRating(dynamic rating, dynamic count) {
+    if (rating == null) return '';
+    final r = rating is num ? rating.toDouble() : double.tryParse(rating.toString());
+    if (r == null) return '';
+    final c = count is num ? count.toInt() : int.tryParse(count?.toString() ?? '');
+    if (c == null) {
+      return r.toStringAsFixed(1);
+    }
+    return '${r.toStringAsFixed(1)} (${c.toString()})';
+  }
+
+  String _formatOpenNow(dynamic openNow) {
+    if (openNow == null) return '';
+    return openNow == true ? 'Open now' : 'Closed';
+  }
+
+  Widget _buildNearbyTabButton(String label, int index) {
+    final isActive = _nearbyTab == index;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _nearbyTab = index;
+          });
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: isActive ? const Color(0xFF1F8A70) : const Color(0xFFE6F4F1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'Arimo',
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: isActive ? Colors.white : const Color(0xFF1F8A70),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPlaceCard(Map<String, dynamic> place) {
+    final distance = _formatDistance(place['distance_meters']);
+    final rating = _formatRating(place['rating'], place['user_ratings_total']);
+    final openNow = _formatOpenNow(place['open_now']);
+    final address = place['address'] ?? '';
+
+    return Container(
+      width: 230,
+      margin: const EdgeInsets.only(right: 12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            place['name'] ?? 'Place',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontFamily: 'Arimo',
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 6),
+          if (address.isNotEmpty)
+            Text(
+              address,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontFamily: 'Arimo',
+                fontSize: 12,
+                color: Colors.black54,
+              ),
+            ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              if (distance.isNotEmpty)
+                Text(
+                  distance,
+                  style: const TextStyle(
+                    fontFamily: 'Arimo',
+                    fontSize: 12,
+                    color: Colors.black54,
+                  ),
+                ),
+              if (distance.isNotEmpty && rating.isNotEmpty)
+                const Text(' â€¢ ', style: TextStyle(color: Colors.black45)),
+              if (rating.isNotEmpty)
+                Row(
+                  children: [
+                    const Icon(Icons.star, size: 14, color: Color(0xFFFFB703)),
+                    const SizedBox(width: 2),
+                    Text(
+                      rating,
+                      style: const TextStyle(
+                        fontFamily: 'Arimo',
+                        fontSize: 12,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ],
+                ),
+            ],
+          ),
+          if (openNow.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Text(
+              openNow,
+              style: TextStyle(
+                fontFamily: 'Arimo',
+                fontSize: 12,
+                color: openNow == 'Open now' ? const Color(0xFF1F8A70) : Colors.black54,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEventCard(Map<String, dynamic> event) {
+    final distance = _formatDistance(event['distance_meters']);
+    final venue = event['venue'] ?? '';
+    final address = event['address'] ?? '';
+    final start = event['start_time'] ?? '';
+    final category = event['category'] ?? '';
+
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            event['name'] ?? 'Event',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontFamily: 'Arimo',
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 6),
+          if (venue.isNotEmpty)
+            Text(
+              venue,
+              style: const TextStyle(
+                fontFamily: 'Arimo',
+                fontSize: 13,
+                color: Colors.black87,
+              ),
+            ),
+          if (address.isNotEmpty)
+            Text(
+              address,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontFamily: 'Arimo',
+                fontSize: 12,
+                color: Colors.black54,
+              ),
+            ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              if (start.isNotEmpty)
+                Text(
+                  start,
+                  style: const TextStyle(
+                    fontFamily: 'Arimo',
+                    fontSize: 12,
+                    color: Colors.black54,
+                  ),
+                ),
+              if (start.isNotEmpty && distance.isNotEmpty)
+                const Text(' â€¢ ', style: TextStyle(color: Colors.black45)),
+              if (distance.isNotEmpty)
+                Text(
+                  distance,
+                  style: const TextStyle(
+                    fontFamily: 'Arimo',
+                    fontSize: 12,
+                    color: Colors.black54,
+                  ),
+                ),
+              if (category.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE6F4F1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      category,
+                      style: const TextStyle(
+                        fontFamily: 'Arimo',
+                        fontSize: 11,
+                        color: Color(0xFF1F8A70),
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -40,6 +310,10 @@ class _LandmarkResultScreenState extends State<LandmarkResultScreen> {
     
     // Extract suggested questions
     final suggestedQuestions = List<String>.from(widget.landmarkData['suggested_questions'] ?? []);
+    final nearby = widget.landmarkData['nearby'] ?? {};
+    final nearbyLandmarks = _asMapList(nearby['landmarks']);
+    final nearbyFood = _asMapList(nearby['food']);
+    final events = _asMapList(widget.landmarkData['events']);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -264,6 +538,82 @@ class _LandmarkResultScreenState extends State<LandmarkResultScreen> {
                           ],
                         ),
                       )),
+                    ],
+
+                    if (nearbyLandmarks.isNotEmpty || nearbyFood.isNotEmpty) ...[
+                      const SizedBox(height: 24),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          'Nearby Suggestions',
+                          style: TextStyle(
+                            fontFamily: 'Arimo',
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Row(
+                          children: [
+                            _buildNearbyTabButton('Landmarks', 0),
+                            const SizedBox(width: 8),
+                            _buildNearbyTabButton('Food', 1),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: SizedBox(
+                          height: 150,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: (_nearbyTab == 0 ? nearbyLandmarks : nearbyFood).isNotEmpty
+                                  ? (_nearbyTab == 0 ? nearbyLandmarks : nearbyFood)
+                                      .map((place) => _buildPlaceCard(place))
+                                      .toList()
+                                  : [
+                                      const Text(
+                                        'No suggestions available.',
+                                        style: TextStyle(
+                                          fontFamily: 'Arimo',
+                                          fontSize: 14,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                    ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+
+                    if (events.isNotEmpty) ...[
+                      const SizedBox(height: 24),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          'Events Nearby',
+                          style: TextStyle(
+                            fontFamily: 'Arimo',
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Column(
+                          children: events.map((event) => _buildEventCard(event)).toList(),
+                        ),
+                      ),
                     ],
                     
                     // Suggested Questions section
