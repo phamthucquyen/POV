@@ -22,6 +22,8 @@ app.add_middleware(
 # Include routers
 app.include_router(auth_router)
 app.include_router(chat_router)
+app.include_router(identify.router)
+app.include_router(wrapped.router)
 
 @app.get("/")
 async def root():

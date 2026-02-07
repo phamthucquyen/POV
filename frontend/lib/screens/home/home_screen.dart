@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../camera/scan_screen.dart';
-import 'home_dashboard.dart';
+import '../profile/profile_dashboard.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _PlaceholderPage(title: 'Calendar (Events)'),
     ScanScreen(),
     _PlaceholderPage(title: 'Search (Chatbot)'),
-    _PlaceholderPage(title: 'Profile'),
+    ProfileDashboard()
   ];
 
   @override
