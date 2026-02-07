@@ -31,16 +31,19 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # load frontend/.env
   assets:
+    # logo splash
+    - assets/logo.png
+
+    # env
     - .env
 
-  # Custom fonts
   fonts:
     - family: "Tilt Warp"
       fonts:
         - asset: assets/TiltWarp-Bold.ttf
           weight: 700
+
     - family: "Comfortaa"
       fonts:
         - asset: assets/Comfortaa-Regular.ttf
