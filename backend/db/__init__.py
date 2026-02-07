@@ -1,3 +1,3 @@
-from . import queries, supabase
+from . import identify, wrapped
 
-__all__ = ["queries", "supabase"]
+__all__ = ["identify", "wrapped"]
