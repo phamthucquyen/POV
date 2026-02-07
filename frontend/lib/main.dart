@@ -1,13 +1,4 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-// import 'dart:io';
-// import 'package:image_picker/image_picker.dart';
-import 'screens/camera/scan_screen.dart';
-// import 'screens/landmark/result_screen.dart';
-// import 'services/landmark_service.dart';
-import 'screens/login/login.dart';
-import 'screens/onboarding/onboarding_screen.dart';
-=======
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
