@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import '../camera/scan_screen.dart';
-import '../profile/profile_dashboard.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,51 +9,49 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 2; // mở app vào tab Scan cho tiện (muốn 0 thì đổi lại)
+  int _currentIndex = 2; // mở app vào tab Camera
 
-  static const _placeholderStyle = TextStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.w600,
-  );
-
-  // Pages for bottom navigation (5 tabs)
   final List<Widget> _pages = const [
-    _PlaceholderPage(title: 'Home (Wrapped/History)'),
     _PlaceholderPage(title: 'Calendar (Events)'),
+    _PlaceholderPage(title: 'Location (Nearby)'),
     ScanScreen(),
-    _PlaceholderPage(title: 'Search (Chatbot)'),
-    ProfileDashboard()
+    _PlaceholderPage(title: 'Search'),
+    _PlaceholderPage(title: 'Profile'),
   ];
+
+  static const double _iconSize = 28; // 👈 phóng to icon
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_currentIndex],
+
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
-        onDestinationSelected: (int index) {
+        onDestinationSelected: (index) {
           setState(() => _currentIndex = index);
         },
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide, // 👈 bỏ chữ
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: Icon(Icons.calendar_month, size: _iconSize),
+            label: '',
           ),
           NavigationDestination(
-            icon: Icon(Icons.calendar_month),
-            label: 'Calendar',
+            icon: Icon(Icons.location_on, size: _iconSize),
+            label: '',
           ),
           NavigationDestination(
-            icon: Icon(Icons.camera_alt),
-            label: 'Scan',
+            icon: Icon(Icons.camera_alt, size: _iconSize),
+            label: '',
           ),
           NavigationDestination(
-            icon: Icon(Icons.search),
-            label: 'Search',
+            icon: Icon(Icons.search, size: _iconSize),
+            label: '',
           ),
           NavigationDestination(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+            icon: Icon(Icons.person, size: _iconSize),
+            label: '',
           ),
         ],
       ),
