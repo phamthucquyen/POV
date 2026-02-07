@@ -133,10 +133,12 @@ async def identify_landmark(
     res.nearby = NearbySuggestions()
     res.events = []
 
-    if lat is not None and lng is not None:
-        res.nearby.landmarks = await get_nearby_landmarks(lat=lat, lng=lng)
-        res.nearby.food = await get_nearby_food(lat=lat, lng=lng)
-        res.events = await get_nearby_events(lat=lat, lng=lng)
+    nearby_lat = res.landmark_lat if res.landmark_lat is not None else lat
+    nearby_lng = res.landmark_lng if res.landmark_lng is not None else lng
+    if nearby_lat is not None and nearby_lng is not None:
+        res.nearby.landmarks = await get_nearby_landmarks(lat=nearby_lat, lng=nearby_lng)
+        res.nearby.food = await get_nearby_food(lat=nearby_lat, lng=nearby_lng)
+        res.events = await get_nearby_events(lat=nearby_lat, lng=nearby_lng)
 
     # post-process safety + confidence/confirmation logic
     res = safe_lists(res)

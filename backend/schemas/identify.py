@@ -43,6 +43,8 @@ class IdentifyRequest(BaseModel):
 class IdentifyResponse(BaseModel):
     landmark_name: str
     location: str
+    landmark_lat: Optional[float] = None
+    landmark_lng: Optional[float] = None
     tags: List[str]
     description: str
     

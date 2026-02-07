@@ -64,6 +64,27 @@ class _LandmarkResultScreenState extends State<LandmarkResultScreen> {
     return openNow == true ? 'Open now' : 'Closed';
   }
 
+  String _formatEventDateTime(dynamic value) {
+    if (value == null) return '';
+    final raw = value.toString().trim();
+    if (raw.isEmpty) return '';
+    final dt = DateTime.tryParse(raw);
+    if (dt == null) return raw;
+    final local = dt.toLocal();
+    const months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    final month = months[local.month - 1];
+    final day = local.day;
+    final year = local.year;
+    final hour24 = local.hour;
+    final minute = local.minute.toString().padLeft(2, '0');
+    final ampm = hour24 >= 12 ? 'PM' : 'AM';
+    final hour12 = hour24 % 12 == 0 ? 12 : hour24 % 12;
+    return '$month $day, $year • $hour12:$minute $ampm';
+  }
+
   Widget _buildNearbyTabButton(String label, int index) {
     final isActive = _nearbyTab == index;
     return Expanded(
@@ -193,7 +214,7 @@ class _LandmarkResultScreenState extends State<LandmarkResultScreen> {
     final distance = _formatDistance(event['distance_meters']);
     final venue = event['venue'] ?? '';
     final address = event['address'] ?? '';
-    final start = event['start_time'] ?? '';
+    final start = _formatEventDateTime(event['start_time']);
     final category = event['category'] ?? '';
 
     return Container(

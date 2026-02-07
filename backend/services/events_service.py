@@ -39,6 +39,7 @@ async def get_nearby_events(
 
     events_raw = data.get("_embedded", {}).get("events", [])
     events: list[EventSuggestion] = []
+    seen: set[tuple[str, str, str]] = set()
 
     for item in events_raw:
         venue = None
@@ -53,6 +54,9 @@ async def get_nearby_events(
             address = ", ".join(parts) if parts else None
 
         date_time = (item.get("dates", {}).get("start", {}) or {}).get("dateTime")
+        date_only = ""
+        if isinstance(date_time, str) and "T" in date_time:
+            date_only = date_time.split("T", 1)[0]
         distance = item.get("distance")
         distance_m = int(float(distance) * 1000) if distance is not None else None
 
@@ -62,9 +66,19 @@ async def get_nearby_events(
             segment = (classifications[0].get("segment") or {}).get("name")
             category = segment
 
+        name = item.get("name", "Event")
+        key = (
+            (name or "").strip().lower(),
+            (venue or "").strip().lower(),
+            date_only,
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+
         events.append(
             EventSuggestion(
-                name=item.get("name", "Event"),
+                name=name,
                 start_time=date_time,
                 venue=venue,
                 address=address,
