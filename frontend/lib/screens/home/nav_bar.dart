@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import '../camera/scan_screen.dart';
 import '../location/location_screen.dart';
 import '../profile/profile_dashboard.dart';
+import '../wrap/wrap_screen.dart';
+
+import '../chatbot/chatbot_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,18 +14,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 2; // mở app vào tab Camera
+  int _currentIndex = 2; 
 
   final List<Widget> _pages = const [
-    _PlaceholderPage(title: 'Calendar (Events)'),
+    WrapScreen(),
     LocationScreen(),
     ScanScreen(),
-    _PlaceholderPage(title: 'Search'),
-    ProfileDashboard(),
+    ChatbotScreen(),
+    ProfileDashboard()
   ];
 
-  static const double _iconSize = 28; // 👈 phóng to icon
-
+  static const double _iconSize = 28; 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onDestinationSelected: (index) {
           setState(() => _currentIndex = index);
         },
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide, // 👈 bỏ chữ
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide, 
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.calendar_month, size: _iconSize),
@@ -56,23 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
             label: '',
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _PlaceholderPage extends StatelessWidget {
-  const _PlaceholderPage({required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        title,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-        textAlign: TextAlign.center,
       ),
     );
   }

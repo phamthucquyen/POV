@@ -41,13 +41,13 @@ def gemini_identify(image_bytes: bytes, mime_type: str, req: IdentifyRequest) ->
     image_part = types.Part.from_bytes(data=image_bytes, mime_type=mime_type)
 
     response = client.models.generate_content(
-        model="gemini-3-flash-preview",
+        model="gemini-3-pro-preview",
         contents=[image_part, prompt],
         config=types.GenerateContentConfig(
             thinking_config=types.ThinkingConfig(
                 thinking_level=types.ThinkingLevel.LOW
             ),
-            max_output_tokens=800,
+            max_output_tokens=2000,
             response_mime_type="application/json",
             response_json_schema=IdentifyResponse.model_json_schema(),
             media_resolution=types.MediaResolution.MEDIA_RESOLUTION_MEDIUM,

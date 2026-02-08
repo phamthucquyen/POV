@@ -97,7 +97,7 @@ async def identify_landmark(
     image_bytes: bytes,
     user_id: Optional[str],
     age_bracket: Optional[AgeBracket],
-    interests: list[str],
+    interests: Optional[list[str]],
     lat: Optional[float],
     lng: Optional[float],
     mime_type: str = "image/jpeg",
@@ -106,7 +106,7 @@ async def identify_landmark(
 
     # resolve final profile - user input takes priority, profile is fallback
     final_age: AgeBracket = age_bracket or "adult"
-    final_interests = normalize_interests(interests)
+    final_interests = normalize_interests(interests or [])
 
     if user_id:
         profile = queries.get_profile(user_id)
@@ -147,13 +147,13 @@ async def identify_landmark(
     # cache result for 1hr
     cache_set(cache_key, res, ttl_seconds=60 * 60)
 
-    # save scan to DB (prefer model coords, fall back to request coords)
+    # save scan to DB and return scan_id for image upload
+    scan_id = None
     if user_id:
         save_lat = res.landmark_lat if res.landmark_lat is not None else lat
         save_lng = res.landmark_lng if res.landmark_lng is not None else lng
         if save_lat is not None and save_lng is not None:
-            # Save landmark coordinates for pin placement.
-            queries.save_scan(
+            scan_record = queries.save_scan(
                 user_id=user_id,
                 landmark_name=res.landmark_name,
                 description=res.description,
@@ -161,6 +161,13 @@ async def identify_landmark(
                 lng=save_lng,
                 tags=res.tags,
                 timestamp=timestamp,
+                image_url=None,  # Will be updated after storage upload
             )
+            if scan_record:
+                scan_id = scan_record.get("id")
+
+    # Store scan_id in response for later image upload
+    if scan_id:
+        res.scan_id = scan_id
 
     return res
