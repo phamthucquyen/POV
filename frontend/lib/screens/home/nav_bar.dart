@@ -3,6 +3,7 @@ import '../camera/scan_screen.dart';
 import '../profile/profile_dashboard.dart';
 import '../wrap/wrap_screen.dart';
 
+import '../chatbot/chatbot_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,8 +19,8 @@ class _HomeScreenState extends State<HomeScreen> {
     WrapScreen(),
     _PlaceholderPage(title: 'Location (Nearby)'),
     ScanScreen(),
-    _PlaceholderPage(title: 'Search'),
-    ProfileDashboard(),
+    ChatbotScreen(),
+    ProfileDashboard()
   ];
 
   static const double _iconSize = 28; 

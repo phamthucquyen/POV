@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../services/user_service.dart';
 
-class ProfileDashboard extends StatelessWidget {
+class ProfileDashboard extends StatefulWidget {
   const ProfileDashboard({super.key});
+
+  @override
+  State<ProfileDashboard> createState() => _ProfileDashboardState();
+}
+
+class _ProfileDashboardState extends State<ProfileDashboard> {
+  final UserService _userService = UserService();
+  final supabase = Supabase.instance.client;
 
   // ===== Match Login typography/colors =====
   static const Color _titleColor = Color(0xFF363E44);
@@ -56,7 +65,6 @@ class ProfileDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final supabase = Supabase.instance.client;
     final user = supabase.auth.currentUser;
 
     // Mock values for now (replace with Supabase later)
@@ -124,7 +132,7 @@ class ProfileDashboard extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
           // Stats row
           Row(
@@ -176,10 +184,75 @@ class ProfileDashboard extends StatelessWidget {
           ...recent.map((r) => _RecentScanTile(scan: r)),
           const SizedBox(height: 24),
 
+                  // Account Actions
+                  const Text(
+                    'Account',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                  ),
+                  const SizedBox(height: 8),
           // Account Actions
           const Text('Account', style: _sectionTilt),
           const SizedBox(height: 8),
 
+                  Card(
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: const Icon(Icons.edit),
+                          title: const Text('Edit Profile'),
+                          trailing: const Icon(Icons.chevron_right),
+                          onTap: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Edit profile coming soon')),
+                            );
+                          },
+                        ),
+                        const Divider(height: 1),
+                        ListTile(
+                          leading: const Icon(Icons.notifications, color: Colors.amber),
+                          title: const Text('Notifications'),
+                          trailing: const Icon(Icons.chevron_right),
+                          onTap: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Notifications coming soon')),
+                            );
+                          },
+                        ),
+                        const Divider(height: 1),
+                        ListTile(
+                          leading: const Icon(Icons.privacy_tip),
+                          title: const Text('Privacy'),
+                          trailing: const Icon(Icons.chevron_right),
+                          onTap: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Privacy settings coming soon')),
+                            );
+                          },
+                        ),
+                        const Divider(height: 1),
+                        ListTile(
+                          leading: const Icon(Icons.logout, color: Colors.red),
+                          title: const Text('Sign Out',
+                              style: TextStyle(color: Colors.red)),
+                          onTap: () async {
+                            await supabase.auth.signOut();
+                            if (context.mounted) {
+                              Navigator.of(context)
+                                  .pushReplacementNamed('/login');
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        },
           Card(
             child: Column(
               children: [
@@ -280,11 +353,13 @@ class ProfileDashboard extends StatelessWidget {
 
 class _StatCard extends StatelessWidget {
   final IconData icon;
+  final Color? iconColor;
   final String label;
   final String value;
 
   const _StatCard({
     required this.icon,
+    this.iconColor,
     required this.label,
     required this.value,
   });
@@ -301,6 +376,7 @@ class _StatCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Icon(icon, color: iconColor),
               Icon(icon, color: _titleColor),
               const SizedBox(height: 10),
               Text(
