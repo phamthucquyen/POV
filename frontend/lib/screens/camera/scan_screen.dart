@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../services/landmark_service.dart';
 import '../../services/scan_location_store.dart';
@@ -34,6 +35,25 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _initializeCamera();
+  }
+
+  Future<Position?> _getPosition() async {
+    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) return null;
+
+    var permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      return null;
+    }
+
+    return Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.medium,
+    );
   }
 
   @override
@@ -175,11 +195,15 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
         return;
       }
 
+      final position = await _getPosition();
+
       final result = await _service.identifyLandmark(
         imageFile: file,
         userId: userId,
         ageBracket: prefs['age_group'],
         interests: prefs['interests'],
+        lat: position?.latitude,
+        lng: position?.longitude,
       );
 
       if (!mounted) return;
