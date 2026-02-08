@@ -13,17 +13,8 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
   final UserService _userService = UserService();
   final supabase = Supabase.instance.client;
 
-  // ===== Match Login typography/colors =====
   static const Color _titleColor = Color(0xFF363E44);
   static const Color _muted = Color(0xFF9CA3AF);
-
-  static const TextStyle _appBarTilt = TextStyle(
-    fontFamily: 'Tilt Warp',
-    fontSize: 18,
-    fontWeight: FontWeight.w700,
-    color: _titleColor,
-    height: 1.2,
-  );
 
   static const TextStyle _sectionTilt = TextStyle(
     fontFamily: 'Tilt Warp',
@@ -41,20 +32,6 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
     height: 1.25,
   );
 
-  static const TextStyle _smallComfortaa = TextStyle(
-    fontFamily: 'Comfortaa',
-    fontSize: 13,
-    fontWeight: FontWeight.w600,
-    color: _muted,
-    height: 1.25,
-  );
-
-  static const TextStyle _buttonComfortaa = TextStyle(
-    fontFamily: 'Comfortaa',
-    fontSize: 14,
-    fontWeight: FontWeight.w700,
-    height: 1.2,
-  );
 
   static const TextStyle _snackComfortaa = TextStyle(
     fontFamily: 'Comfortaa',
@@ -85,13 +62,10 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
           final int streakDays = stats['streak_days'] ?? 0;
           final String displayName = profile['username'] ?? user?.email ?? 'User';
 
-          return FutureBuilder<List<Map<String, dynamic>>>(
-            future: _userService.getRecentScans(limit: 3),
-            builder: (context, scansSnapshot) {
-              return ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  const SizedBox(height: 48),
+          return ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+                  const SizedBox(height: 60),
                   // Profile Header
                   Center(
                     child: Column(
@@ -108,14 +82,19 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                         Text(
                           displayName,
                           style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w700),
+                              fontFamily: 'Comfortaa',
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           user?.createdAt != null 
                               ? 'Member since ${DateTime.parse(user!.createdAt).year}'
                               : 'Member since ${DateTime.now().year}',
-                          style: const TextStyle(fontSize: 13, color: Colors.grey),
+                          style: const TextStyle(
+                              fontFamily: 'Comfortaa',
+                              fontSize: 13,
+                              color: Colors.grey),
                         ),
                       ],
                     ),
@@ -148,37 +127,6 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
 
           const SizedBox(height: 24),
 
-          // Recent Activity
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Recent Activity', style: _sectionTilt),
-              TextButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'View full history coming soon',
-                        style: _snackComfortaa,
-                      ),
-                    ),
-                  );
-                },
-                child: const Text('See all', style: _buttonComfortaa),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 8),
-          ...recent.map((r) => _RecentScanTile(scan: r)),
-          const SizedBox(height: 24),
-
-                  // Account Actions
-                  const Text(
-                    'Account',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-                  ),
-                  const SizedBox(height: 8),
           // Account Actions
           const Text('Account', style: _sectionTilt),
           const SizedBox(height: 8),
@@ -187,50 +135,88 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                     child: Column(
                       children: [
                         ListTile(
-                          leading: const Icon(Icons.edit),
-                          title: const Text('Edit Profile'),
+                          leading: const Icon(Icons.edit, color: _titleColor),
+                          title: const Text(
+                            'Edit Profile',
+                            style: TextStyle(
+                              fontFamily: 'Comfortaa',
+                              fontSize: 14.5,
+                              fontWeight: FontWeight.w700,
+                              color: _titleColor,
+                            ),
+                          ),
                           trailing: const Icon(Icons.chevron_right),
                           onTap: () {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                  content: Text('Edit profile coming soon')),
+                                content:
+                                    Text('Edit profile coming soon', style: _snackComfortaa),
+                              ),
                             );
                           },
                         ),
                         const Divider(height: 1),
                         ListTile(
-                          leading: const Icon(Icons.notifications, color: Colors.amber),
-                          title: const Text('Notifications'),
+                          leading: const Icon(Icons.notifications, color: _titleColor),
+                          title: const Text(
+                            'Notifications',
+                            style: TextStyle(
+                              fontFamily: 'Comfortaa',
+                              fontSize: 14.5,
+                              fontWeight: FontWeight.w700,
+                              color: _titleColor,
+                            ),
+                          ),
                           trailing: const Icon(Icons.chevron_right),
                           onTap: () {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                  content: Text('Notifications coming soon')),
+                                content:
+                                    Text('Notifications coming soon', style: _snackComfortaa),
+                              ),
                             );
                           },
                         ),
                         const Divider(height: 1),
                         ListTile(
-                          leading: const Icon(Icons.privacy_tip),
-                          title: const Text('Privacy'),
+                          leading: const Icon(Icons.privacy_tip, color: _titleColor),
+                          title: const Text(
+                            'Privacy',
+                            style: TextStyle(
+                              fontFamily: 'Comfortaa',
+                              fontSize: 14.5,
+                              fontWeight: FontWeight.w700,
+                              color: _titleColor,
+                            ),
+                          ),
                           trailing: const Icon(Icons.chevron_right),
                           onTap: () {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                  content: Text('Privacy settings coming soon')),
+                                content: Text(
+                                  'Privacy settings coming soon',
+                                  style: _snackComfortaa,
+                                ),
+                              ),
                             );
                           },
                         ),
                         const Divider(height: 1),
                         ListTile(
                           leading: const Icon(Icons.logout, color: Colors.red),
-                          title: const Text('Sign Out',
-                              style: TextStyle(color: Colors.red)),
+                          title: const Text(
+                            'Sign Out',
+                            style: TextStyle(
+                              fontFamily: 'Comfortaa',
+                              fontSize: 14.5,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.red,
+                            ),
+                          ),
                           onTap: () async {
                             await supabase.auth.signOut();
                             if (context.mounted) {
-                              Navigator.of(context)
-                                  .pushReplacementNamed('/login');
+                              Navigator.of(context).pushReplacementNamed('/login');
                             }
                           },
                         ),
@@ -240,115 +226,18 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                 ],
               );
             },
-          );
-        },
-          Card(
-            child: Column(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.edit, color: _titleColor),
-                  title: const Text(
-                    'Edit Profile',
-                    style: TextStyle(
-                      fontFamily: 'Comfortaa',
-                      fontSize: 14.5,
-                      fontWeight: FontWeight.w700,
-                      color: _titleColor,
-                    ),
-                  ),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content:
-                            Text('Edit profile coming soon', style: _snackComfortaa),
-                      ),
-                    );
-                  },
-                ),
-                const Divider(height: 1),
-                ListTile(
-                  leading: const Icon(Icons.notifications, color: _titleColor),
-                  title: const Text(
-                    'Notifications',
-                    style: TextStyle(
-                      fontFamily: 'Comfortaa',
-                      fontSize: 14.5,
-                      fontWeight: FontWeight.w700,
-                      color: _titleColor,
-                    ),
-                  ),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content:
-                            Text('Notifications coming soon', style: _snackComfortaa),
-                      ),
-                    );
-                  },
-                ),
-                const Divider(height: 1),
-                ListTile(
-                  leading: const Icon(Icons.privacy_tip, color: _titleColor),
-                  title: const Text(
-                    'Privacy',
-                    style: TextStyle(
-                      fontFamily: 'Comfortaa',
-                      fontSize: 14.5,
-                      fontWeight: FontWeight.w700,
-                      color: _titleColor,
-                    ),
-                  ),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Privacy settings coming soon',
-                          style: _snackComfortaa,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                const Divider(height: 1),
-                ListTile(
-                  leading: const Icon(Icons.logout, color: Colors.red),
-                  title: const Text(
-                    'Sign Out',
-                    style: TextStyle(
-                      fontFamily: 'Comfortaa',
-                      fontSize: 14.5,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.red,
-                    ),
-                  ),
-                  onTap: () async {
-                    await supabase.auth.signOut();
-                    if (context.mounted) {
-                      Navigator.of(context).pushReplacementNamed('/login');
-                    }
-                  },
-                ),
-              ],
-            ),
           ),
-        ],
-      ),
-    );
+        );
   }
 }
 
 class _StatCard extends StatelessWidget {
   final IconData icon;
-  final Color? iconColor;
   final String label;
   final String value;
 
   const _StatCard({
     required this.icon,
-    this.iconColor,
     required this.label,
     required this.value,
   });
@@ -365,7 +254,6 @@ class _StatCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(icon, color: iconColor),
               Icon(icon, color: _titleColor),
               const SizedBox(height: 10),
               Text(
@@ -392,60 +280,6 @@ class _StatCard extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _RecentScan {
-  final String title;
-  final String subtitle;
-  const _RecentScan({required this.title, required this.subtitle});
-}
-
-class _RecentScanTile extends StatelessWidget {
-  final _RecentScan scan;
-  const _RecentScanTile({required this.scan});
-
-  static const Color _titleColor = Color(0xFF363E44);
-  static const Color _muted = Color(0xFF9CA3AF);
-  static const TextStyle _title = TextStyle(
-    fontFamily: 'Comfortaa',
-    fontSize: 14.5,
-    fontWeight: FontWeight.w800,
-    color: _titleColor,
-    height: 1.2,
-  );
-  static const TextStyle _subtitle = TextStyle(
-    fontFamily: 'Comfortaa',
-    fontSize: 13,
-    fontWeight: FontWeight.w600,
-    color: _muted,
-    height: 1.2,
-  );
-
-  static const TextStyle _snackComfortaa = TextStyle(
-    fontFamily: 'Comfortaa',
-    fontSize: 14,
-    fontWeight: FontWeight.w600,
-    height: 1.33,
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        leading: const CircleAvatar(child: Icon(Icons.image)),
-        title: Text(scan.title, style: _title),
-        subtitle: Text(scan.subtitle, style: _subtitle),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Scan details coming soon', style: _snackComfortaa),
-            ),
-          );
-        },
       ),
     );
   }
