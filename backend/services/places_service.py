@@ -86,6 +86,8 @@ async def _fetch_places(
         places.append(
             PlaceSuggestion(
                 name=item.get("name", "Unknown"),
+                lat=place_lat,
+                lng=place_lng,
                 address=item.get("vicinity") or item.get("formatted_address"),
                 rating=item.get("rating"),
                 user_ratings_total=item.get("user_ratings_total"),

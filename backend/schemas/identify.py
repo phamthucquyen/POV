@@ -13,6 +13,8 @@ class FunFacts(BaseModel):
 
 class PlaceSuggestion(BaseModel):
     name: str
+    lat: Optional[float] = None
+    lng: Optional[float] = None
     address: Optional[str] = None
     rating: Optional[float] = None
     user_ratings_total: Optional[int] = None
