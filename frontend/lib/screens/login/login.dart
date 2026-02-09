@@ -29,23 +29,6 @@ class _LoginScreenState extends State<LoginScreen> {
     return e.toString();
   }
 
-  Future<bool> _isOnboardingDone(String userId) async {
-    // Prefer a dedicated flag if you created it.
-    // Falls back to "age_group exists" so it works even without schema changes.
-    final profile = await _sb
-        .from('profiles')
-        .select('onboarding_done, age_group')
-        .eq('id', userId)
-        .maybeSingle();
-
-    if (profile == null) return false;
-
-    final doneFlag = profile['onboarding_done'];
-    if (doneFlag == true) return true;
-
-    final ageGroup = profile['age_group'];
-    return ageGroup != null && (ageGroup as String).trim().isNotEmpty;
-  }
 
   Future<void> _onLogin() async {
     final email = _email.text.trim();
@@ -83,8 +66,6 @@ class _LoginScreenState extends State<LoginScreen> {
         return;
       }
 
-      // ✅ Decide where to go: skip onboarding if already completed
-      final done = await _isOnboardingDone(user.id);
       if (!mounted) return;
 
       Navigator.pushReplacementNamed(context, '/home_screen');
@@ -132,7 +113,6 @@ class _LoginScreenState extends State<LoginScreen> {
   static const Color _titleColor = Color(0xFF363E44);
   static const Color _fieldBg = Color(0xFFEDFFFC);
   static const Color _buttonBg = Color(0xFFF05B55);
-  static const Color _word = Color(0xFF9EE3D8);
 
   static const TextStyle _titleStyle = TextStyle(
     color: _titleColor,

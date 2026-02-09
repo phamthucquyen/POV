@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../services/chat_service.dart';
-import '../../constants/colors.dart';
 
 class ChatbotScreen extends StatefulWidget {
   final String? landmarkName;

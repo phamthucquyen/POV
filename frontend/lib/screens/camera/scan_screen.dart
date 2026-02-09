@@ -4,8 +4,6 @@ import 'package:camera/camera.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:geolocator/geolocator.dart';
 
 import '../../services/landmark_service.dart';
 import '../../services/scan_location_store.dart';

@@ -6,8 +6,6 @@ import 'screens/login/login.dart';
 import 'screens/login/signup.dart';
 import 'screens/onboarding/onboarding_screen.dart';
 import 'screens/camera/scan_screen.dart';
-import 'screens/landmark/result_screen.dart';
-import 'services/landmark_service.dart';
 import 'screens/home/nav_bar.dart';
 import 'screens/wrap/wrap_screen.dart';
 

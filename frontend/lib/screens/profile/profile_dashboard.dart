@@ -14,43 +14,12 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
   final supabase = Supabase.instance.client;
 
   static const Color _titleColor = Color(0xFF363E44);
-  static const Color _muted = Color(0xFF9CA3AF);
 
   static const TextStyle _sectionTilt = TextStyle(
     fontFamily: 'Tilt Warp',
     fontSize: 16,
     fontWeight: FontWeight.w700,
     color: _titleColor,
-    height: 1.2,
-  );
-  static const TextStyle _smallComfortaa = TextStyle(
-    fontFamily: 'Comfortaa',
-    fontSize: 13,
-    fontWeight: FontWeight.w600,
-    color: _muted,
-    height: 1.25,
-  );
-
-  static const TextStyle _buttonComfortaa = TextStyle(
-    fontFamily: 'Comfortaa',
-    fontSize: 14,
-    fontWeight: FontWeight.w700,
-    height: 1.2,
-  );
-
-  static const TextStyle _tileTitleComfortaa = TextStyle(
-    fontFamily: 'Comfortaa',
-    fontSize: 14.5,
-    fontWeight: FontWeight.w800,
-    color: _titleColor,
-    height: 1.2,
-  );
-
-  static const TextStyle _tileSubtitleComfortaa = TextStyle(
-    fontFamily: 'Comfortaa',
-    fontSize: 13,
-    fontWeight: FontWeight.w600,
-    color: _muted,
     height: 1.2,
   );
 

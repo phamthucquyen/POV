@@ -60,8 +60,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     });
 
     try {
-      // interest column is text => store as comma-separated string
-      final interestText = _interests.isEmpty ? null : _interests.join(', ');
 
       // Convert display text to backend key value
       final ageGroupKey = _selectedAge != null ? _ageGroupMap[_selectedAge] : null;
@@ -94,14 +92,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     fontSize: 30,
     fontWeight: FontWeight.w700,
     height: 1.22,
-  );
-
-  static const TextStyle _subtitleComfortaa = TextStyle(
-    color: _titleColor,
-    fontFamily: 'Comfortaa',
-    fontSize: 16,
-    fontWeight: FontWeight.w500,
-    height: 1.33,
   );
 
   static const TextStyle _helperComfortaa = TextStyle(
