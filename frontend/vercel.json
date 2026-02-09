@@ -1,7 +1,7 @@
 {
-  "buildCommand": "flutter build web --release --web-renderer canvaskit --dart-define=API_URL=$API_URL",
+  "buildCommand": "echo 'Using pre-built Flutter web files'",
   "outputDirectory": "build/web",
-  "installCommand": "if [ ! -d \"/usr/local/flutter\" ]; then git clone https://github.com/flutter/flutter.git -b stable --depth 1 /usr/local/flutter; fi && export PATH=\"$PATH:/usr/local/flutter/bin\" && flutter doctor && flutter pub get",
+  "installCommand": "echo 'No install needed - using pre-built files'",
   "framework": null,
   "rewrites": [
     {
