@@ -32,12 +32,21 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
     color: _titleColor,
     height: 1.2,
   );
+
   static const TextStyle _smallComfortaa = TextStyle(
     fontFamily: 'Comfortaa',
     fontSize: 13,
     fontWeight: FontWeight.w600,
     color: _muted,
     height: 1.25,
+  );
+
+  static const TextStyle _emailComfortaa = TextStyle(
+    fontFamily: 'Comfortaa',
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    color: _titleColor,
+    height: 1.33,
   );
 
   static const TextStyle _buttonComfortaa = TextStyle(
@@ -144,23 +153,15 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
           // Stats row
           Row(
             children: const [
-              _StatCard(icon: Icons.place, label: 'Places', value: '$placesVisited'),
+              _StatCard(icon: Icons.place, label: 'Places', value: '12'),
               SizedBox(width: 12),
-              _StatCard(
-                icon: Icons.calendar_month,
-                label: 'This week',
-                value: '$scansThisWeek',
-              ),
+              _StatCard(icon: Icons.calendar_month, label: 'This week', value: '3'),
               SizedBox(width: 12),
-              _StatCard(
-                icon: Icons.local_fire_department,
-                label: 'Streak',
-                value: '${streakDays}d',
-              ),
+              _StatCard(icon: Icons.local_fire_department, label: 'Streak', value: '2d'),
             ],
           ),
 
-              const SizedBox(height: 24),
+          const SizedBox(height: 24),
 
           // Recent Activity
           Row(
@@ -201,7 +202,10 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Edit profile coming soon', style: _snackComfortaa),
+                        content: Text(
+                          'Edit profile coming soon',
+                          style: _snackComfortaa,
+                        ),
                       ),
                     );
                   },

@@ -5,7 +5,6 @@ import '../../services/wrapped_service.dart';
 import 'city_card.dart';
 import 'recent_scan_tile.dart';
 import 'city_wrap_screen.dart';
-import 'city_wrap_screen.dart';
 
 class WrapScreen extends StatefulWidget {
   const WrapScreen({super.key});
@@ -101,69 +100,23 @@ class _WrapScreenState extends State<WrapScreen> {
     final items = (raw['items'] is List) ? (raw['items'] as List) : const [];
 
     // Cities list expected by UI: [{name, color_hex}, ...]
-    // We'll show ONE city card (top city). If null -> empty list so UI shows empty state message.
     final List<Map<String, dynamic>> cities = topCity == null
         ? <Map<String, dynamic>>[]
         : <Map<String, dynamic>>[
             {
               'name': topCity,
-              'color_hex': '#7ADBCF', // keep your default
+              'color_hex': '#7ADBCF', // default
             }
           ];
 
     // Recent scans expected by UI: [{landmark_name, timestamp, image_url}, ...]
-    // New schema WrappedScanItem has landmark_name,tags,timestamp (no image_url),
-    // so image_url will be null unless you add it to backend.
     final List<Map<String, dynamic>> recent = items
         .whereType<Map>()
         .map((e) {
           return <String, dynamic>{
             'landmark_name': e['landmark_name'],
             'timestamp': e['timestamp'],
-            'image_url': e['image_url'], // will be null unless backend provides it
-          };
-        })
-        .toList();
-
-    return <String, dynamic>{
-      ...raw,
-      'cities': cities,
-      'recent_scans': recent,
-    };
-  }
-
-  /// ✅ Compatibility adapter:
-  /// - Old backend: { cities: [...], recent_scans: [...] }
-  /// - New backend: { top_city: "...", items: [...], ... }
-  /// This function returns a map that ALWAYS contains cities + recent_scans
-  Map<String, dynamic> _normalizeWrapped(Map<String, dynamic> raw) {
-    final hasOldCities = raw['cities'] is List;
-    final hasOldRecent = raw['recent_scans'] is List;
-    if (hasOldCities && hasOldRecent) return raw;
-
-    final topCityRaw = raw['top_city'];
-    final topCity = (topCityRaw is String && topCityRaw.trim().isNotEmpty)
-        ? topCityRaw.trim()
-        : null;
-
-    final items = (raw['items'] is List) ? (raw['items'] as List) : const [];
-
-    final List<Map<String, dynamic>> cities = topCity == null
-        ? <Map<String, dynamic>>[]
-        : <Map<String, dynamic>>[
-            {
-              'name': topCity,
-              'color_hex': '#7ADBCF',
-            }
-          ];
-
-    final List<Map<String, dynamic>> recent = items
-        .whereType<Map>()
-        .map((e) {
-          return <String, dynamic>{
-            'landmark_name': e['landmark_name'],
-            'timestamp': e['timestamp'],
-            'image_url': e['image_url'],
+            'image_url': e['image_url'], // null unless backend provides it
           };
         })
         .toList();
@@ -244,9 +197,6 @@ class _WrapScreenState extends State<WrapScreen> {
             final raw = snap.data ?? {};
             final data = _normalizeWrapped(raw);
 
-            final raw = snap.data ?? {};
-            final data = _normalizeWrapped(raw);
-
             final List cities = (data['cities'] as List?) ?? const [];
             final List recent = (data['recent_scans'] as List?) ?? const [];
 
@@ -255,13 +205,10 @@ class _WrapScreenState extends State<WrapScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Your Journey',
-                    style: _h1Tilt.copyWith(color: _titleColor),
-                  ),
+                  Text('Your Journey', style: _h1Tilt.copyWith(color: _titleColor)),
                   const SizedBox(height: 16),
 
-                  // ✅ ✅ City blocks (ONLY city name) (ONLY city name)
+                  // City blocks
                   SizedBox(
                     height: 145,
                     child: cities.isEmpty
@@ -275,15 +222,11 @@ class _WrapScreenState extends State<WrapScreen> {
                         : ListView.separated(
                             scrollDirection: Axis.horizontal,
                             itemCount: cities.length,
-                            separatorBuilder: (_, __) =>
-                                const SizedBox(width: 18),
+                            separatorBuilder: (_, __) => const SizedBox(width: 18),
                             itemBuilder: (context, i) {
                               final city = cities[i] as Map?;
-                              final name =
-                                  (city?['name'] ?? 'Unknown').toString();
-                                  (city?['name'] ?? 'Unknown').toString();
+                              final name = (city?['name'] ?? 'Unknown').toString();
                               final color =
-                                  (city?['color_hex'] ?? '#7ADBCF').toString();
                                   (city?['color_hex'] ?? '#7ADBCF').toString();
 
                               return CityCard(
@@ -293,15 +236,7 @@ class _WrapScreenState extends State<WrapScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) =>
-                                          CityWrapScreen(cityName: name),
-                                    ),
-                                  );
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          CityWrapScreen(cityName: name),
+                                      builder: (_) => CityWrapScreen(cityName: name),
                                     ),
                                   );
                                 },
@@ -319,30 +254,17 @@ class _WrapScreenState extends State<WrapScreen> {
                   ),
                   const SizedBox(height: 12),
 
-                  // ✅ Recent scans: title + time only
-                  // ✅ Recent scans: title + time only
                   Expanded(
                     child: recent.isEmpty
                         ? const Center(
-                            child: Text(
-                              'No recent scans yet.',
-                              style: _emptyStateComfortaa,
-                            ),
+                            child: Text('No recent scans yet.', style: _emptyStateComfortaa),
                           )
                         : ListView.builder(
                             itemCount: recent.length,
                             itemBuilder: (context, i) {
                               final scan = recent[i] as Map?;
                               final title =
-                                  (scan?['landmark_name'] ?? 'Unknown')
-                                      .toString();
-
-                              final time = _formatTime(scan?['timestamp']);
-                              final thumb = scan?['image_url']?.toString();
-                              final title =
-                                  (scan?['landmark_name'] ?? 'Unknown')
-                                      .toString();
-
+                                  (scan?['landmark_name'] ?? 'Unknown').toString();
                               final time = _formatTime(scan?['timestamp']);
                               final thumb = scan?['image_url']?.toString();
 
